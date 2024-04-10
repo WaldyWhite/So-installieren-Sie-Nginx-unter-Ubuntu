@@ -163,7 +163,7 @@
 
 Добавьте в страницу следующий образец кода HTML:
 
-                        /var/www/your_domain/html/index.html
+*vi /var/www/your_domain/html/index.html*
 
     <html>
         <head>
@@ -182,7 +182,7 @@
 
 Введите следующий блок конфигурации, который похож на заданный по умолчанию, но обновлен с учетом новой директории и доменного имени:
 
-                        /etc/nginx/sites-available/your_domain
+*vi /etc/nginx/sites-available/your_domain*
 
     server {
         listen 80;
@@ -215,7 +215,8 @@
 
 Найдите директиву *server_names_hash_bucket_size* и удалите символ #, чтобы раскомментировать строку. Если вы используете nano, вы можете быстро найти слова в файле, нажав *CTRL* и *w*.
 
-                            /etc/nginx/nginx.conf
+*vi /etc/nginx/nginx.conf*
+
     ...
     http {
         ...
