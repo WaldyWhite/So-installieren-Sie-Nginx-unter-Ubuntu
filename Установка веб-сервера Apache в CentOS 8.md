@@ -67,7 +67,7 @@ Apache не запускается автоматически на CentOS пос
 
 Вы увидите стандартную веб-страницу Apache в CentOS 8:
 
-<img src='Screenshot 2024-04-10 152240.png'>
+<img src='/workspaces/So-installieren-Sie-Nginx-unter-Ubuntu/img/Screenshot 2024-04-10 152240.png'>
 
 <br>
 
@@ -240,6 +240,6 @@ Apache не запускается автоматически на CentOS пос
 
 Теперь, когда вы настроили ваш виртуальный хост и обновили разрешения SELinux, Apache будет обслуживать ваше доменное имя. Вы можете проверить это, открыв в браузере адрес http://example.com, после чего должны увидеть примерно следующее:
 
-<img src='/workspaces/So-installieren-Sie-Nginx-unter-Ubuntu/Success.png'>
+<img src='/workspaces/So-installieren-Sie-Nginx-unter-Ubuntu/img/Success.png'>
 
 Это подтверждает, что ваш виртуальный хост успешно настроен и обслуживает контент. Повторите шаги 4 и 5 для создания новых виртуальных хостов с разрешениями SELinux для дополнительных доменов.
