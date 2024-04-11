@@ -147,3 +147,107 @@ Save and close the file. Now copy the info.php file you created to *site2*:
     sudo cp /var/www/site1.your_domain/info.php /var/www/site2.your_domain/info.php
 
 Your web server now has the document root directories that each site requires to serve data to visitors. Next, you will configure your Apache web server to work with two different PHP versions.
+
+---
+---
+<br>
+
+## Step 3 — Configuring Apache for Both Websites
+
+In this section, you will create two virtual host configuration files. This will enable your two websites to work simultaneously with two different PHP versions.
+
+In order for Apache to serve this content, it is necessary to create a virtual host file with the correct directives. You’ll create two new virtual host configuration file inside the directory */etc/httpd/conf.d/*.
+
+First create a new virtual host configuration file for the website *site1.your_domain*. Here you will direct Apache to render content using *php7.3*:
+
+    sudo vi /etc/httpd/conf.d/site1.your_domain.conf
+
+Add the following content. Make sure the website directory path, server name, and PHP version match your setup:
+
+*/etc/httpd/conf.d/site1.your_domain.conf*
+
+    <VirtualHost *:80>
+        ServerAdmin admin@site1.your_domain
+        ServerName site1.your_domain
+        DocumentRoot /var/www/site1.your_domain
+        DirectoryIndex info.php
+        ErrorLog /var/log/httpd/site1.your_domain-error.log
+        CustomLog /var/log/httpd/site1.your_domain-access.log combined
+
+        <IfModule !mod_php7.c>
+            <FilesMatch \.(php|phar)$>
+                SetHandler "proxy:unix:/var/opt/remi/php73/run php-fpm/www.sock|fcgi://localhost"
+            </FilesMatch>
+        </IfModule>
+
+    </VirtualHost>
+
+For *DocumentRoot* you are specifying the path of your website root directory. For *ServerAdmin* you are adding an email that the *your_domain* site administrator can access. For *ServerName* you are adding the url for your first subdomain. For *SetHandler* you are specifying the PHP-FPM socket file for php7.3.
+
+Save and close the file.
+
+Next, create a new virtual host configuration file for the website *site2.your_domain*. You will specify this subdomain to deploy *php7.4*:
+
+    sudo vi /etc/httpd/conf.d/site2.your_domain.conf
+
+Add the following content. Again, make sure the website directory path, server name, and PHP version match your unique information:
+
+*vi /etc/httpd/conf.d/site2.your_domain.conf*
+
+    <VirtualHost *:80>
+        ServerAdmin admin@site2.your_domain
+        ServerName site2.your_domain
+        DocumentRoot /var/www/site2.your_domain
+        DirectoryIndex info.php
+        ErrorLog /var/log/httpd/site2.your_domain-error.log
+        CustomLog /var/log/httpd/site2.your_domain-access.log combined
+
+        <IfModule !mod_php7.c>
+            <FilesMatch \.(php|phar)$>
+            SetHandler "proxy:unix:/var/opt/remi/php74/run/php-fpm/www.sock|fcgi://localhost"
+            </FilesMatch>
+        </IfModule>
+
+    </VirtualHost>
+
+Save and close the file when you are finished. Then, check the Apache configuration file for any syntax errors with the following command:
+
+    sudo apachectl configtest
+
+You’ll see an output printing *Syntax OK*:
+
+    Output
+    Syntax OK
+
+Finally, restart the Apache service to implement your changes:
+
+    sudo systemctl restart httpd
+
+Now that you have configured Apache to serve each site, you will test them to make sure the proper PHP versions are running.
+
+---
+---
+<br>
+
+## Step 4 — Testing Both Websites
+
+At this point, you have configured two websites to run two different versions of PHP. Now test the results.
+
+Open your web browser and visit both sites *http://site1.your_domain* and *http://site2.your_domain*. You will see two pages that look like this:
+
+<img src='/workspaces/So-installieren-Sie-Nginx-unter-Ubuntu/img/phpver73.png'>
+
+<img src='/workspaces/So-installieren-Sie-Nginx-unter-Ubuntu/img/phpver74.png'>
+
+Note the titles. The first page indicates that *site1.your_domain* deployed PHP version 7.3. The second indicates that *site2.your_domain* deployed PHP version 7.4.
+
+Now that you’ve tested your sites, remove the *info.php* files. Because they contain sensitive information about your server and are accessible to unauthorized users, they pose a security vulnerability. To remove both files, run the following commands:
+
+    sudo rm -rf /var/www/site1.your_domain/info.php
+    sudo rm -rf /var/www/site2.your_domain/info.php
+
+You now have a single CentOS 8 server handling two websites with two different PHP versions. PHP-FPM, however, is not limited to this one application.
+
+---
+---
+
